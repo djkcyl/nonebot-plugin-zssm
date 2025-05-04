@@ -165,4 +165,4 @@ async def handle(msg_id: MsgId, ext: ReplyRecordExtension, event: Event, bot: Bo
         return await UniMessage(Text("AI 回复解析失败, 请重试")).send(reply_to=Reply(msg_id))
 
     await message_reaction("144", msg_id, event, bot)
-    await UniMessage(Text(response)).send(reply_to=Reply(msg_id))
+    await UniMessage(Text(response)).send(reply_to=reply)
