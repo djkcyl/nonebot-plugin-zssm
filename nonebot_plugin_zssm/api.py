@@ -42,24 +42,36 @@ class AsyncChatClient:
             "Content-Type": "application/json",
         }
 
-    async def create(self, model: str, messages: list[dict[str, Any]], **kwargs) -> dict:
+    async def create(
+        self, model: str, messages: list[dict[str, Any]], **kwargs
+    ) -> dict:
         """发起非流式请求并返回解析后的响应"""
         url = f"{self.endpoint}/chat/completions"
         payload = {"model": model, "messages": messages, "stream": False, **kwargs}
 
-        response = await self._client.post(url, headers=self._build_headers(), json=payload, timeout=self.timeout)
+        response = await self._client.post(
+            url, headers=self._build_headers(), json=payload, timeout=self.timeout
+        )
 
         if response.status_code != 200:
             await self._handle_error(response)
 
         return response.json()
 
-    def stream_create(self, model: str, messages: list[dict[str, Any]], **kwargs) -> AsyncGenerator[str, None]:
+    def stream_create(
+        self, model: str, messages: list[dict[str, Any]], **kwargs
+    ) -> AsyncGenerator[str, None]:
         """发起流式请求并返回异步生成器"""
         url = f"{self.endpoint}/chat/completions"
         payload = {"model": model, "messages": messages, "stream": True, **kwargs}
 
-        response_stream = self._client.stream("POST", url, headers=self._build_headers(), json=payload, timeout=self.timeout)
+        response_stream = self._client.stream(
+            "POST",
+            url,
+            headers=self._build_headers(),
+            json=payload,
+            timeout=self.timeout,
+        )
 
         return self._process_stream(response_stream)
 
@@ -74,7 +86,9 @@ class AsyncChatClient:
             code = response.status_code
         raise APIError(message, code)
 
-    async def _process_stream(self, response: _AsyncGeneratorContextManager[httpx.Response, None]) -> AsyncGenerator[str, None]:
+    async def _process_stream(
+        self, response: _AsyncGeneratorContextManager[httpx.Response, None]
+    ) -> AsyncGenerator[str, None]:
         """处理流式响应"""
         self.content = ""
         self.reasoning_content = ""
@@ -95,8 +109,8 @@ class AsyncChatClient:
                         delta = choice.get("delta", {})
 
                         # 更新内容
-                        self.reasoning_content += delta["reasoning_content"] or ""
-                        self.content += delta["content"] or ""
+                        self.reasoning_content += delta.get("reasoning_content") or ""
+                        self.content += delta.get("content") or ""
 
                         yield self.reasoning_content + self.content
                 except json.JSONDecodeError:

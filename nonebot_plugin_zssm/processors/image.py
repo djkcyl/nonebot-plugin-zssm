@@ -61,7 +61,9 @@ async def process_image(image: Image) -> str | None:
         return None
 
     try:
-        async with AsyncChatClient(config.zssm_ai_vl_endpoint, config.zssm_ai_vl_token) as client:
+        async with AsyncChatClient(
+            config.zssm_ai_vl_endpoint, config.zssm_ai_vl_token
+        ) as client:
             logger.info(f"处理图片: {image.url}")
             last_time = time.time()
             last_chunk = ""
@@ -89,12 +91,16 @@ async def process_image(image: Image) -> str | None:
                 last_chunk = chunk
                 if time.time() - last_time > 5:
                     last_time = time.time()
-                    small_chunk = f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}" if len(chunk) > 60 else chunk
+                    small_chunk = (
+                        f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}"
+                        if len(chunk) > 60
+                        else chunk
+                    )
                     logger.info(f"图片处理进度: {i}, {small_chunk}")
 
             logger.info(f"图片处理完成: {i}, {last_chunk}")
             return client.content
 
     except Exception as e:
-        logger.error(f"图片处理失败: {e}")
+        logger.opt(exception=e).error(f"图片处理失败: {e}")
         return None

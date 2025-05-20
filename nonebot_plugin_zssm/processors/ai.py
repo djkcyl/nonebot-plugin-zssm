@@ -9,7 +9,9 @@ from ..api import AsyncChatClient
 from ..config import Config
 
 # 从文件加载系统提示词
-SYSTEM_PROMPT_RAW = Path(__file__).parent.parent.joinpath("prompt.txt").read_text(encoding="utf-8")
+SYSTEM_PROMPT_RAW = (
+    Path(__file__).parent.parent.joinpath("prompt.txt").read_text(encoding="utf-8")
+)
 config = get_plugin_config(Config)
 
 
@@ -27,7 +29,9 @@ async def generate_ai_response(system_prompt: str, user_prompt: str) -> str | No
         return None
 
     try:
-        async with AsyncChatClient(config.zssm_ai_text_endpoint, config.zssm_ai_text_token) as client:
+        async with AsyncChatClient(
+            config.zssm_ai_text_endpoint, config.zssm_ai_text_token
+        ) as client:
             last_time = time.time()
             last_chunk = ""
             i = 0
@@ -44,7 +48,11 @@ async def generate_ai_response(system_prompt: str, user_prompt: str) -> str | No
                     last_chunk = chunk
                     if time.time() - last_time > 5:
                         last_time = time.time()
-                        small_chunk = f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}" if len(chunk) > 60 else chunk
+                        small_chunk = (
+                            f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}"
+                            if len(chunk) > 60
+                            else chunk
+                        )
                         logger.info(f"AI响应进度: {i}, {small_chunk}")
                 except Exception as e:
                     logger.error(f"处理AI响应块失败: {e}")
@@ -86,19 +94,20 @@ async def generate_ai_response(system_prompt: str, user_prompt: str) -> str | No
                 if llm_output.get("keyword"):
                     keywords = llm_output["keyword"]
                     if isinstance(keywords, list):
-                        return f"关键词：{' | '.join(keywords)}\n\n{llm_output['output']}"
+                        return (
+                            f"关键词：{' | '.join(keywords)}\n\n{llm_output['output']}"
+                        )
                     return f"关键词：{keywords}\n\n{llm_output['output']}"
 
                 return llm_output["output"]
 
             except json.JSONDecodeError as e:
-                logger.error(f"JSON解析失败: {data}")
-                logger.error(f"错误详情: {e}")
+                logger.opt(exception=e).error(f"JSON解析失败: {data}")
                 return None
 
     except KeyError as e:
-        logger.error(f"缺少必要字段: {e}")
+        logger.opt(exception=e).error("缺少必要字段")
         return None
     except Exception as e:
-        logger.error(f"生成AI响应失败: {e}")
+        logger.opt(exception=e).error("生成AI响应失败")
         return None
