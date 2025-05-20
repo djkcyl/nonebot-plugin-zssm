@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from nonebot import get_driver, require
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
@@ -5,6 +7,13 @@ from .browser import install_browser
 from .config import Config
 
 require("nonebot_plugin_alconna")
+
+
+try:
+    __version__ = version("nonebot_plugin_zssm")
+except Exception:
+    __version__ = None
+
 
 __plugin_meta__ = PluginMetadata(
     name="nonebot-plugin-zssm",
@@ -14,7 +23,7 @@ __plugin_meta__ = PluginMetadata(
     type="application",
     config=Config,
     supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
-    extra={"author": "djkcyl", "version": "0.3.5"},
+    extra={"author": "djkcyl", "version": __version__},
 )
 
 
