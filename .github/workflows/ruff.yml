@@ -3,10 +3,10 @@ name: Ruff Lint
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     paths:
-      - "src/**"
+      - "nonebot_plugin_zssm/**"
 
 jobs:
   ruff:
