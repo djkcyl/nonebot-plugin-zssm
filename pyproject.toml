@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-zssm"
-version = "0.3.5"
+version = "0.3.6"
 description = "这是什么？问一下！用 ai 来解释群友发送的「未知」内容"
 authors = [{ name = "djkcyl", email = "cyl@cyllive.cn" }]
 dependencies = [

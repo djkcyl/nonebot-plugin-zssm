@@ -61,9 +61,8 @@ async def process_image(image: Image) -> str | None:
         return None
 
     try:
-        async with AsyncChatClient(
-            config.zssm_ai_vl_endpoint, config.zssm_ai_vl_token
-        ) as client:
+        logger.info(f"开始处理图片: {config.zssm_ai_vl_model}")
+        async with AsyncChatClient(config.zssm_ai_vl_endpoint, config.zssm_ai_vl_token) as client:
             logger.info(f"处理图片: {image.url}")
             last_time = time.time()
             last_chunk = ""
