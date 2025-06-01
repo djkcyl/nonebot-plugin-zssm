@@ -39,7 +39,7 @@ async def download_pdf(url: str) -> BytesIO | None:
             buffer.seek(0)
             return buffer
     except httpx.HTTPError as e:
-        logger.error(f"下载PDF失败: {url}, 错误: {e}")
+        logger.opt(exception=e).error(f"下载PDF失败: {url}, 错误: {e}")
         return None
 
 
@@ -96,5 +96,5 @@ async def process_pdf(url: str) -> str | None:
                     doc.close()
 
     except Exception as e:
-        logger.error(f"处理PDF失败: {url}, 错误: {e}")
+        logger.opt(exception=e).error(f"处理PDF失败: {url}, 错误: {e}")
         return None

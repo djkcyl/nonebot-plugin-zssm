@@ -86,14 +86,14 @@ AI的响应如下:
                     logger.warning("检测到system prompt泄露，已替换响应")
                     return True, "（抱歉，我现在还不会这个）"
             except json.JSONDecodeError as e:
-                logger.error(f"审查结果JSON解析失败: {e}")
+                logger.opt(exception=e).error(f"审查结果JSON解析失败: {e}")
                 logger.debug(f"原始审查内容: {audit_content}")
                 return False, response
             else:
                 return False, response
 
     except Exception as e:
-        logger.error(f"检查prompt泄露失败: {e}")
+        logger.opt(exception=e).error(f"检查prompt泄露失败: {e}")
         return False, response
 
 
@@ -132,7 +132,7 @@ async def generate_ai_response(system_prompt: str, user_prompt: str) -> str | No
                         small_chunk = f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}" if len(chunk) > 60 else chunk
                         logger.info(f"AI响应进度: {i}, {small_chunk}")
                 except Exception as e:
-                    logger.error(f"处理AI响应块失败: {e}")
+                    logger.opt(exception=e).error(f"处理AI响应块失败: {e}")
 
             logger.info(f"AI响应完成: {i}")
             print(last_chunk)  # noqa: T201
@@ -147,7 +147,7 @@ async def generate_ai_response(system_prompt: str, user_prompt: str) -> str | No
                 markdown_pattern = r"^```\w*\s*|\s*```$"
                 data = re.sub(markdown_pattern, "", data.strip())
             except Exception as e:
-                logger.warning(f"清理Markdown格式失败: {e}")
+                logger.opt(exception=e).warning(f"清理Markdown格式失败: {e}")
 
             # 尝试解析JSON
             try:

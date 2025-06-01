@@ -34,7 +34,7 @@ async def process_web_page(url: str) -> str | None:
         try:
             await page.goto(url, timeout=60000)
         except Exception as e:
-            logger.error(f"打开链接失败: {url}, 错误: {e}")
+            logger.opt(exception=e).error(f"打开链接失败: {url}, 错误: {e}")
             await page.close()
             return None
 
@@ -48,7 +48,7 @@ async def process_web_page(url: str) -> str | None:
         await page.close()
 
     except Exception as e:
-        logger.error(f"处理网页失败: {url}, 错误: {e}")
+        logger.opt(exception=e).error(f"处理网页失败: {url}, 错误: {e}")
         return None
     else:
         return content_text

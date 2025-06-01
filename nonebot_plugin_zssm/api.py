@@ -105,6 +105,6 @@ class AsyncChatClient:
                         self.content += delta.get("content") or ""
 
                         yield self.reasoning_content + self.content
-                except json.JSONDecodeError:
-                    logger.error(f"Failed to parse stream chunk: {chunk}")
+                except json.JSONDecodeError as e:
+                    logger.opt(exception=e).error(f"Failed to parse stream chunk: {chunk}")
                     continue
