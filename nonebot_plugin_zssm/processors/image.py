@@ -90,11 +90,7 @@ async def process_image(image: Image) -> str | None:
                 last_chunk = chunk
                 if time.time() - last_time > 5:
                     last_time = time.time()
-                    small_chunk = (
-                        f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}"
-                        if len(chunk) > 60
-                        else chunk
-                    )
+                    small_chunk = f"{chunk[:20]}...{len(chunk) - 40}...{chunk[-20:]}" if len(chunk) > 60 else chunk
                     logger.info(f"图片处理进度: {i}, {small_chunk}")
 
             logger.info(f"图片处理完成: {i}, {last_chunk}")
