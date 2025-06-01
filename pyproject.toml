@@ -15,16 +15,8 @@ requires-python = ">=3.12"
 readme = "README.md"
 license = { text = "MIT" }
 
-
 [dependency-groups]
-dev = [
-    "nonebot-adapter-satori>=0.13.4",
-]
-
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
+dev = ["nonebot-adapter-satori>=0.13.4", "ruff ~= 0.9", "pre-commit ~= 4.1"]
 
 [tool.ruff]
 line-length = 135
@@ -103,7 +95,7 @@ ignore = [
     "COM812",  # 强制尾随逗号
     "TID252",  # 相对导入
     "ISC001",  # format warning
-    "RUF001"
+    "RUF001",
 ]
 flake8-quotes = { inline-quotes = "double", multiline-quotes = "double" }
 
@@ -113,5 +105,16 @@ mypy-init-return = true
 [tool.ruff.lint.flake8-builtins]
 builtins-ignorelist = ["id"]
 
+[tool.pyright]
+pythonPlatform = "All"
+
+typeCheckingMode = "standard"
+reportShadowedImports = false
+disableBytesTypePromotions = true
+
 [tool.pdm]
 distribution = true
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
