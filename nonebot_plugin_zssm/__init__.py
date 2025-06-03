@@ -1,6 +1,6 @@
 from importlib.metadata import version
 
-from nonebot import get_driver, require
+from nonebot import get_driver, get_plugin_config, require
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
 from .browser import install_browser
@@ -27,7 +27,9 @@ __plugin_meta__ = PluginMetadata(
 )
 
 
-driver = get_driver()
-driver.on_startup(install_browser)
+config = get_plugin_config(Config)
+if config.zssm_install_browser:
+    driver = get_driver()
+    driver.on_startup(install_browser)
 
 from . import handle  # noqa: E402, F401

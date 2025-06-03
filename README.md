@@ -82,6 +82,7 @@ _✨ 这是什么？问一下！ ✨_
 | zssm_ai_check_token | 否 | 无 | 审查使用的 api-key，不填则不进行审查 |
 | zssm_ai_check_model | 否 | deepseek-v3 | 审查使用的模型 |
 | zssm_browser_proxy | 否 | 无 | 浏览器代理 |
+| zssm_install_browser | 否 | True | 启动时安装浏览器 |
 | zssm_pdf_max_size | 否 | 10 | 最大pdf大小 |
 | zssm_pdf_max_chars | 否 | 300000 | 最大字符数 |
 | zssm_pdf_max_pages | 否 | 50 | 最大页数 |
