@@ -96,9 +96,11 @@ class AsyncChatClient:
                         if data_str == "[DONE]":
                             continue
 
-                        data = json.loads(data_str)
-                        choice = data["choices"][0]
-                        delta = choice.get("delta", {})
+                        choices: list[dict[str, Any]] | None = json.loads(data_str).get("choices")
+                        if not choices:
+                            break
+
+                        delta = choices[0].get("delta", {})
 
                         # 更新内容
                         self.reasoning_content += delta.get("reasoning_content") or ""
